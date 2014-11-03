@@ -115,30 +115,30 @@ int main(int argc, char* argv[]) {
     long i;
     int c, newFileStartCluster, nextCluster;
     FILE *fileBoot = fopen("boot.bin", "rb");
-    FILE *fileOutImage = fopen("dostest.img", "wb");
+    FILE *fileOutImage = fopen("FunnyOS.img", "wb");
     if(fileBoot == NULL) {
         printf("Error, need boot.bin!\n");
         return 1;
     }
      
     //设置img为1.44M
-	printf("##### create 1.44M dostest.img ####\n");
+	printf("##### create 1.44M FunnyOS.img ####\n");
     for(i = 0; i < 0x168000; i++)
         fputc(0, fileOutImage);
     rewind(fileOutImage);
 
     //将boot.bin放入dostest.img
-	printf("##### copy boot.bin to first 512 byte of dostest.img ####\n");
+	printf("##### copy boot.bin to first 512 byte of FunnyOS.img ####\n");
     while (( c = fgetc( fileBoot )) != EOF)
         fputc(c, fileOutImage);
     fclose(fileBoot);	
 
 	printf("##### add KERNEL.SYS ####\n");
     nextCluster = addFile(2, "KERNEL.SYS", fileOutImage);
-	printf("##### add COMMAND.COM ####\n");
-    addFile(nextCluster, "COMMAND.COM", fileOutImage);
+	//printf("##### add COMMAND.COM ####\n");
+    //addFile(nextCluster, "COMMAND.COM", fileOutImage);
 
     fclose(fileOutImage);	
-	printf("##### Success! Use dostest.img to boot ####\n");
+	printf("##### Success! Use FunnyOS.img to boot ####\n");
     return 0;
 }

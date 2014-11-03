@@ -744,9 +744,9 @@ boot_success:   call    print
                 db      " GO!",13,10,0
                 ;jmp $
                 mov     bl, [drive]
-				mov ax,  0x1d9
+				mov ax,  0x3ef
 				mov ds, ax
-		jmp	word LOADSEG:0x127c
+		jmp	word LOADSEG:0x2286
 
 
 ; prints text after call to this function.

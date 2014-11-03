@@ -37,6 +37,13 @@ typedef unsigned short OS_CPU_SR;                /* Define size of CPU status re
 #define LONG           INT32S
 #define ULONG          INT32U
 
+#ifndef  FALSE
+#define  FALSE                     0
+#endif
+
+#ifndef  TRUE
+#define  TRUE                      1
+#endif
 /*
 *********************************************************************************************************
 *                                               CONSTANTS
@@ -94,4 +101,6 @@ void    PC_DispClrScr(INT8U bgnd_color);
 void    PC_DispStr(INT8U x, INT8U y, INT8U *s, INT8U color);
 
 void    PC_SetTickRate(INT16U freq);
+void    PC_VectSet(INT8U vect, void (*isr)(void));
 void   *PC_VectGet(INT8U vect);
+BOOLEAN PC_GetKey (INT16S *c);

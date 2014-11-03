@@ -273,3 +273,56 @@ void PC_VectSet (INT8U vect, void (*isr)(void))
     *pvect   = (INT16U)FP_SEG(isr);                   /* Store ISR segment                             */
     asm sti;
 }
+
+/*
+*********************************************************************************************************
+*                                        OBTAIN INTERRUPT VECTOR
+*
+* Description: This function reads the pointer stored at the specified vector.
+*
+* Arguments  : vect  is the desired interrupt vector number, a number between 0 and 255.
+*
+* Returns    : The address of the Interrupt handler stored at the desired vector location.
+*********************************************************************************************************
+*/
+void *PC_VectGet (INT8U vect)
+{
+#if OS_CRITICAL_METHOD == 3                      /* Allocate storage for CPU status register           */
+    OS_CPU_SR  cpu_sr;
+#endif    
+    INT16U    *pvect;
+    INT16U     off;
+    INT16U     seg;
+    
+    
+    pvect = (INT16U *)MK_FP(0x0000, vect * 4);        /* Point into IVT at desired vector location     */
+    asm cli;
+    off   = *pvect++;                                 /* Obtain the vector's OFFSET                    */
+    seg   = *pvect;                                   /* Obtain the vector's SEGMENT                   */
+    asm sti;
+    return (MK_FP(seg, off));
+}
+/*
+*********************************************************************************************************
+*                                        CHECK AND GET KEYBOARD KEY
+*
+* Description: This function checks to see if a key has been pressed at the keyboard and returns TRUE if
+*              so.  Also, if a key is pressed, the key is read and copied where the argument is pointing
+*              to.
+*
+* Arguments  : c     is a pointer to where the read key will be stored.
+*
+* Returns    : TRUE  if a key was pressed
+*              FALSE otherwise
+*********************************************************************************************************
+*/
+BOOLEAN PC_GetKey (INT16S *c)
+{
+    if (kbhit()) {                                         /* See if a key has been pressed            */
+        *c = (INT16S)getch();                              /* Get key pressed                          */
+        return (TRUE);
+    } else {
+        *c = 0x00;                                         /* No key pressed                           */
+        return (FALSE);
+    }
+}
